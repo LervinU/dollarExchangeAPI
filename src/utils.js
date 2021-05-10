@@ -4,3 +4,4 @@ const getBestRate = async () => {
     const BRData = await scrape.scrapeBR();
     
 }
+

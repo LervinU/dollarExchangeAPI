@@ -20,20 +20,34 @@ const getBancoCaribeData = async (req, res) => {
     res.json(bancoCaribeData);
 }
 
+const getAPAPData = async (req, res) => {
+    const APAPData = await scrape.scrapeAPAP();
+    res.json(APAPData);
+}
+
+const getBHDData = async (req, res) => {
+    const BHDData = await scrape.scrapeBHD();
+    res.json(BHDData);
+}
+
 const getAllBanksData = async (req, res) => {
-    const data = [
-        await scrape.scrapeBR(),
-        await scrape.scrapeScotiaBank(),
-        await scrape.scrapePopular(),
-        await scrape.scrapeBancoCaribe()
-    ]
+    const data = [];
+    for (const [key, value] of Object.entries(scrape)) {
+        data.push(await value())
+    }
     res.json(data);
 }
+
+
+
 
 module.exports = {
     getBRData,
     getScotiaData,
     getPopularData,
     getBancoCaribeData,
+    getAPAPData,
+    getBHDData,
     getAllBanksData
+    
 }
