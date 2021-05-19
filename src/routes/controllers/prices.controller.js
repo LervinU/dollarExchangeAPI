@@ -1,32 +1,45 @@
 const scrape =  require("../../scrape");
 
+const getData = async (scrapeFunc) => {
+    try {
+        const data = await scrapeFunc();
+        return data;
+    } catch(error) { throw error; }
+}
+
 const getBRData = async (req, res) => {
-    const BRData = await scrape.scrapeBR();
+    const BRData = await getData(scrape.scrapeBR)
+    .catch( e => { console.error(e) });
     res.json(BRData);
 }
 
 const getScotiaData = async (req, res) => {
-    const scotiaData = await scrape.scrapeScotiaBank();
+    const scotiaData = await getData(scrape.scrapeScotiaBank)
+    .catch( e => { console.error(e) });
     res.json(scotiaData);
 }
 
 const getPopularData = async (req, res) => {
-    const popularData = await scrape.scrapePopular();
+    const popularData = await getData(scrape.scrapePopular)
+    .catch( e => { console.error(e) });
     res.json(popularData);
 }
 
 const getBancoCaribeData = async (req, res) => {
-    const bancoCaribeData = await scrape.scrapeBancoCaribe();
+    const bancoCaribeData = await getData(scrape.scrapeBancoCaribe)
+    .catch( e => { console.error(e) });
     res.json(bancoCaribeData);
 }
 
 const getAPAPData = async (req, res) => {
-    const APAPData = await scrape.scrapeAPAP();
+    const APAPData = await getData(scrape.scrapeAPAP)
+    .catch( e => { console.error(e) });
     res.json(APAPData);
 }
 
 const getBHDData = async (req, res) => {
-    const BHDData = await scrape.scrapeBHD();
+    const BHDData = await getData(scrape.scrapeBHD)
+    .catch( e => { console.error(e) });
     res.json(BHDData);
 }
 
@@ -37,9 +50,6 @@ const getAllBanksData = async (req, res) => {
     }
     res.json(data);
 }
-
-
-
 
 module.exports = {
     getBRData,
