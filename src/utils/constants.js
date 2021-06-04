@@ -7,7 +7,15 @@ const CONSTANTS = {
         promerica: "promerica",
         caribe: "caribe",
         scotiabank: "scotiabank"
+    },
+    DBCollections: {
+        dollarPrice: "dollarPrice",
+        exchangePrices: "exchangePrices"
+    },
+    DBDocs: {
+        bankInfo: "bankInfo"
     }
+
 }
 
 module.exports = {

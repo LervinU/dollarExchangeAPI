@@ -1,4 +1,5 @@
 const scrape = require('../scrape');
+const { CONSTANTS } = require('./constants');
 
 const utils = {
     
@@ -15,7 +16,18 @@ const utils = {
             const data = await scrapeFunc();
             return data;
         } catch(error) { throw error; }
-    } 
+    },
+
+    getBankNames: () => {
+        const banks = (() => {
+            let names = [];
+            for(const [key, value] of Object.entries(CONSTANTS.bankNames)) {
+                names.push(value);
+            }
+            return names;
+        })();
+        return banks;
+    }
 
 }
 

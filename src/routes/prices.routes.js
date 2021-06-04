@@ -9,6 +9,7 @@ router.get("/popular", controller.getPopularData);
 router.get("/bancoCaribe", controller.getBancoCaribeData);
 router.get("/APAP", controller.getAPAPData);
 router.get("/BHD", controller.getBHDData);
+router.get('/promerica', controller.getPromericaData);
 router.get("/allBanks", controller.getAllBanksData);
 
 

@@ -1,54 +1,64 @@
 const scrape =  require("../../scrape");
+const { utils } = require("../../utils/utils");
+const { db } = require('../../db/dbConection');
+const { CONSTANTS } = require('../../utils/constants'); 
 
-const getData = async (scrapeFunc) => {
-    try {
-        const data = await scrapeFunc();
-        return data;
-    } catch(error) { throw error; }
+const ref = db.collection(CONSTANTS.DBCollections.dollarPrice)
+              .doc(CONSTANTS.DBDocs.bankInfo)
+              .collection(CONSTANTS.DBCollections.exchangePrices);
+
+
+const getSnapshot = async (bankName) => {
+    const snapshot = ref.where('name', '==', bankName).orderBy("date", "desc").limit(1).get();
+    return snapshot;
 }
 
 const getBRData = async (req, res) => {
-    const BRData = await getData(scrape.scrapeBR)
-    .catch( e => { console.error(e) });
-    res.json(BRData);
+    let snapshot = await getSnapshot(CONSTANTS.bankNames.banreservas); 
+    snapshot.forEach((doc) => res.json(doc.data()));
 }
 
 const getScotiaData = async (req, res) => {
-    const scotiaData = await getData(scrape.scrapeScotiaBank)
-    .catch( e => { console.error(e) });
-    res.json(scotiaData);
+    let snapshot = await getSnapshot(CONSTANTS.bankNames.scotiabank); 
+    snapshot.forEach((doc) => res.json(doc.data()));
 }
 
 const getPopularData = async (req, res) => {
-    const popularData = await getData(scrape.scrapePopular)
-    .catch( e => { console.error(e) });
-    res.json(popularData);
+    let snapshot = await getSnapshot(CONSTANTS.bankNames.popular); 
+    snapshot.forEach((doc) => res.json(doc.data()));
 }
 
 const getBancoCaribeData = async (req, res) => {
-    const bancoCaribeData = await getData(scrape.scrapeBancoCaribe)
-    .catch( e => { console.error(e) });
-    res.json(bancoCaribeData);
+    let snapshot = await getSnapshot(CONSTANTS.bankNames.caribe); 
+    snapshot.forEach((doc) => res.json(doc.data()));
 }
 
 const getAPAPData = async (req, res) => {
-    const APAPData = await getData(scrape.scrapeAPAP)
-    .catch( e => { console.error(e) });
-    res.json(APAPData);
+    let snapshot = await getSnapshot(CONSTANTS.bankNames.apap); 
+    snapshot.forEach((doc) => res.json(doc.data()));
 }
 
 const getBHDData = async (req, res) => {
-    const BHDData = await getData(scrape.scrapeBHD)
-    .catch( e => { console.error(e) });
-    res.json(BHDData);
+    let snapshot = await getSnapshot(CONSTANTS.bankNames.bhd); 
+    snapshot.forEach((doc) => res.json(doc.data()));
+}
+
+const getPromericaData = async (req, res) => {
+    let snapshot = await getSnapshot(CONSTANTS.bankNames.promerica); 
+    snapshot.forEach((doc) => res.json(doc.data()));
 }
 
 const getAllBanksData = async (req, res) => {
-    const data = [];
-    for (const [key, value] of Object.entries(scrape)) {
-        data.push(await value())
+    const banks = utils.getBankNames();
+    let snapshot = null;
+    let result = [];
+    for(value of banks) {
+        snapshot = await getSnapshot(value);
+        snapshot.forEach(doc => {
+            result.push(doc.data());
+        });
     }
-    res.json(data);
+    res.json(result);
 }
 
 module.exports = {
@@ -58,6 +68,7 @@ module.exports = {
     getBancoCaribeData,
     getAPAPData,
     getBHDData,
-    getAllBanksData
+    getAllBanksData,
+    getPromericaData,
     
 }
