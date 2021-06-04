@@ -50,10 +50,8 @@ const validateInsertion = async (modelObj) => {
         }
 };
 
-const invoker = setInterval(async function() {
-    saveToDB();
-}, scrapeTimeInterval);
 
 module.exports = {
-    invoker
+    saveToDB,
+    scrapeTimeInterval
 }
