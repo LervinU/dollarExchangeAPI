@@ -4,7 +4,7 @@ const admin = require('firebase-admin');
 const { utils } = require('../utils/utils');
 const { CONSTANTS } = require('../utils/constants');
 
-const scrapeTimeInterval = 36000000; //60 minutes
+const scrapeTimeInterval = 60000; //1 minutes
 
 const saveToDB = async () => {
     let modelObj = {}
