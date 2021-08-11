@@ -18,7 +18,8 @@ const saveToDB = async () => {
             sellsDollar: stringToNumber(bankData.sellsDollar),
             date: admin.firestore.Timestamp.fromMillis(Date.now())
         }
-        if(modelObj !== null && (typeof modelObj.buysDollar) === "number" && (typeof modelObj.sellsDollar) === "number") {
+        
+        if(modelObj != null && (typeof modelObj.buysDollar) === "number" && (typeof modelObj.sellsDollar) === "number") {
             validateInsertion(modelObj);
         }
     }
@@ -26,10 +27,15 @@ const saveToDB = async () => {
 
 
 const writeToDB = async (modelObj) => {
-    await db.collection(CONSTANTS.DBCollections.dollarPrice)
-            .doc(CONSTANTS.DBDocs.bankInfo)
-            .collection(CONSTANTS.DBCollections.exchangePrices)
-            .add(modelObj);
+    if(validateObjFields(modelObj)) { 
+        await db.collection(CONSTANTS.DBCollections.dollarPrice)
+        .doc(CONSTANTS.DBDocs.bankInfo)
+        .collection(CONSTANTS.DBCollections.exchangePrices)
+        .add(modelObj);
+        console.log("Saved success");
+    } else {
+        console.log(`Not valid object: ${JSON.stringify(modelObj)}`);
+    }
 };
 
 const validateInsertion = async (modelObj) => {
@@ -48,6 +54,15 @@ const validateInsertion = async (modelObj) => {
                 }
             });
         }
+};
+
+const validateObjFields = (modelObj) => {
+    const condition = 
+        modelObj.buysDollar != 0 ||
+        modelObj.sellsDollar != 0 ||
+        modelObj.name != undefined;
+
+    return condition ? true : false;
 };
 
 
