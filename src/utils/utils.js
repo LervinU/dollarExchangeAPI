@@ -27,6 +27,12 @@ const utils = {
             return names;
         })();
         return banks;
+    },
+
+    getPercentageVariation: (newNumber, originalNumber) => {
+        const increase = newNumber - originalNumber;
+        const percentageIncrease = (increase / originalNumber) * 100;
+        return percentageIncrease.toFixed(2);
     }
 
 }

@@ -9,43 +9,79 @@ const ref = db.collection(CONSTANTS.DBCollections.dollarPrice)
 
 
 const getSnapshot = async (bankName) => {
-    const snapshot = ref.where('name', '==', bankName).orderBy("date", "desc").limit(1).get();
+    const snapshot = ref.where('name', '==', bankName).orderBy("date", "desc").limit(2).get();
     return snapshot;
 }
 
+const getObj = (data) => {
+    return {
+        name: data.name,
+        sellsDollar: data.sellsDollar,
+        buysDollar: data.buysDollar,
+        date: data.date.toDate()
+    }
+}
+
+const getResultArr = (resultArr) => {
+    if(resultArr.length > 1) {
+        let result = resultArr; // [0] is the most resent record
+        result[0].variation = {
+            buyVariation: utils.getPercentageVariation(result[0].buysDollar, result[1].buysDollar),
+            sellVariation: utils.getPercentageVariation(result[0].sellsDollar, result[1].sellsDollar)
+        };
+        return result[0];
+    } else {
+        return resultArr[0];
+    }
+};
+
+const getResponseObj = (snapshot) => {
+    let result = []; 
+    snapshot.forEach((doc) => result.push(getObj(doc.data())));
+    result = getResultArr(result);
+    return result;
+};
+
 const getBRData = async (req, res) => {
-    let snapshot = await getSnapshot(CONSTANTS.bankNames.banreservas); 
-    snapshot.forEach((doc) => res.json(doc.data()));
+    let snapshot = await getSnapshot(CONSTANTS.bankNames.banreservas);
+    const result = getResponseObj(snapshot);
+    res.json(result);
 }
 
 const getScotiaData = async (req, res) => {
-    let snapshot = await getSnapshot(CONSTANTS.bankNames.scotiabank); 
-    snapshot.forEach((doc) => res.json(doc.data()));
+    let snapshot = await getSnapshot(CONSTANTS.bankNames.scotiabank);
+    const result = getResponseObj(snapshot);
+    res.json(result);
 }
-
+9
 const getPopularData = async (req, res) => {
     let snapshot = await getSnapshot(CONSTANTS.bankNames.popular); 
-    snapshot.forEach((doc) => res.json(doc.data()));
+    const result = getResponseObj(snapshot);
+    res.json(result);
 }
 
 const getBancoCaribeData = async (req, res) => {
     let snapshot = await getSnapshot(CONSTANTS.bankNames.caribe); 
-    snapshot.forEach((doc) => res.json(doc.data()));
+    const result = getResponseObj(snapshot);
+    res.json(result);
 }
 
 const getAPAPData = async (req, res) => {
     let snapshot = await getSnapshot(CONSTANTS.bankNames.apap); 
-    snapshot.forEach((doc) => res.json(doc.data()));
+    const result = getResponseObj(snapshot);
+    res.json(result);
 }
 
 const getBHDData = async (req, res) => {
     let snapshot = await getSnapshot(CONSTANTS.bankNames.bhd); 
-    snapshot.forEach((doc) => res.json(doc.data()));
+    const result = getResponseObj(snapshot);
+    res.json(result);
 }
 
 const getPromericaData = async (req, res) => {
     let snapshot = await getSnapshot(CONSTANTS.bankNames.promerica); 
-    snapshot.forEach((doc) => res.json(doc.data()));
+    const result = getResponseObj(snapshot);
+    res.json(result);
 }
 
 const getAllBanksData = async (req, res) => {
@@ -55,7 +91,7 @@ const getAllBanksData = async (req, res) => {
     for(value of banks) {
         snapshot = await getSnapshot(value);
         snapshot.forEach(doc => {
-            result.push(doc.data());
+            result.push(getObj(doc.data()));
         });
     }
     res.json(result);

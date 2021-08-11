@@ -163,9 +163,12 @@ const scrapePromerica = async () => {
 }
 
 
-// Promise.resolve(scrapePromerica()).then(data => {
-//     console.log(data);
-// })
+
+    // Promise.resolve(scrapePromerica()).then(data => {
+    //     console.log(data);
+    // })
+
+
 
 module.exports = {
     scrapeBR,
