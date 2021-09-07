@@ -23,14 +23,18 @@ const getObj = (data) => {
 }
 
 const getResultArr = (resultArr) => {
+    let result = resultArr; // [0] is the most resent record
     if(resultArr.length > 1) {
-        let result = resultArr; // [0] is the most resent record
         result[0].variation = {
             buyVariation: utils.getPercentageVariation(result[0].buysDollar, result[1].buysDollar),
             sellVariation: utils.getPercentageVariation(result[0].sellsDollar, result[1].sellsDollar)
         };
         return result[0];
     } else {
+        result[0].variation = {
+            buyVariation: "0.00",
+            sellVariation: "0.00"
+        };
         return resultArr[0];
     }
 };
@@ -88,11 +92,11 @@ const getAllBanksData = async (req, res) => {
     const banks = utils.getBankNames();
     let snapshot = null;
     let result = [];
+    let bankData = null;
     for(value of banks) {
         snapshot = await getSnapshot(value);
-        snapshot.forEach(doc => {
-            result.push(getObj(doc.data()));
-        });
+        bankData = getResponseObj(snapshot);
+        result.push(bankData);
     }
     res.json(result);
 }
