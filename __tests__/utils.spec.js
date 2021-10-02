@@ -12,7 +12,7 @@ describe('Test utility functions', () => {
     })
 
     test('Expected to return the spread of the dollar price', () => {
-        expect(utils.calculateSpread(57.0, 56.0)).toBe('1.00');
+        expect(utils.calculateSpread(56.0, 57.0)).toBe('1.00');
     });
 
     test('Expected to return the amount variation', () => {
