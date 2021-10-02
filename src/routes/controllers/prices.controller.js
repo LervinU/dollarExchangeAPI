@@ -1,4 +1,3 @@
-const scrape =  require("../../scrape");
 const { utils } = require("../../utils/utils");
 const { db } = require('../../db/dbConection');
 const { CONSTANTS } = require('../../utils/constants'); 
@@ -18,6 +17,7 @@ const getObj = (data) => {
         name: data.name,
         sellsDollar: data.sellsDollar,
         buysDollar: data.buysDollar,
+        spread: utils.calculateSpread(data.buysDollar, data.sellsDollar),
         date: data.date.toDate()
     }
 }
@@ -27,13 +27,17 @@ const getResultArr = (resultArr) => {
     if(resultArr.length > 1) {
         result[0].variation = {
             buyVariation: utils.getPercentageVariation(result[0].buysDollar, result[1].buysDollar),
-            sellVariation: utils.getPercentageVariation(result[0].sellsDollar, result[1].sellsDollar)
+            sellVariation: utils.getPercentageVariation(result[0].sellsDollar, result[1].sellsDollar),
+            buyVariationAmount: utils.getAmountVariation(result[0].buysDollar, result[1].buysDollar),
+            sellVariationAmount: utils.getAmountVariation(result[0].sellsDollar, result[1].sellsDollar),
         };
         return result[0];
     } else {
         result[0].variation = {
             buyVariation: "0.00",
-            sellVariation: "0.00"
+            sellVariation: "0.00",
+            buyVariationAmount: "0.00",
+            sellVariationAmount: "0.00"
         };
         return resultArr[0];
     }

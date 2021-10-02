@@ -33,8 +33,17 @@ const utils = {
         const increase = newNumber - originalNumber;
         const percentageIncrease = (increase / originalNumber) * 100;
         return percentageIncrease.toFixed(2);
-    }
+    },
 
+    getAmountVariation: (newNumber, originalNumber) => {
+        const increase = newNumber - originalNumber;
+        return increase.toFixed(2);
+    },
+
+    calculateSpread: (buyPrice, sellPrice) => {
+        const spread = sellPrice - buyPrice;
+        return spread.toFixed(2);
+    }
 }
 
 module.exports = {
