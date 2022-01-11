@@ -58,8 +58,8 @@ const validateInsertion = async (modelObj) => {
 
 const validateObjFields = (modelObj) => {
     const condition = 
-        modelObj.buysDollar != 0 ||
-        modelObj.sellsDollar != 0 ||
+        modelObj.buysDollar != 0 &&
+        modelObj.sellsDollar != 0 &&
         modelObj.name != undefined;
 
     return condition ? true : false;
