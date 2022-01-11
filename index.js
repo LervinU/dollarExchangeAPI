@@ -13,6 +13,7 @@ app.use('/api/dollar/history', require("./src/routes/history.router"));
 
 let refrestime = parseInt(process.env.refresTime);
 
+saveToDB();
 setInterval(async function() {
     saveToDB();
 }, refrestime);
