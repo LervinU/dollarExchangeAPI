@@ -96,16 +96,27 @@ const scrapeWithPuppeteer = async (pageUrl, bankName) => {
             await browser.close();
             return data;
         }
+        else if(bankName === banreservas) {
+            await page.goto(pageUrl);
+            const data = await page.evaluate(() => {
+                return {
+                    title: "banreservas",
+                    buysDollar: document.querySelector('#site-nav-panel > ul:nth-child(1) > li:nth-child(2) > span').innerText.replace(/[^0-9\.]+/g,""),
+                    sellsDollar: document.querySelector('#site-nav-panel > ul:nth-child(1) > li:nth-child(3) > span').innerText.replace(/[^0-9\.]+/g,"")
+                }
+            })
+            await browser.close();
+            return data;
+        }
 };
 
-const scrapeBR = async () => {
-    const $ = await getHtml("https://www.banreservas.com/");
 
-    return {
-        title: banreservas,
-        buysDollar: $('.currency-nav').find('.first').find('span').text(),
-        sellsDollar: $('.currency-nav').find('.last').find('span').text()
-    }
+const scrapeBR = async () => {
+    const url = "https://www.banreservas.com/";
+    const bankName = banreservas;
+
+    const data = await scrapeWithPuppeteer(url, bankName);
+    return data;
 };
 
 const scrapeScotiaBank = async () => {
@@ -164,11 +175,11 @@ const scrapePromerica = async () => {
 
 
 
-    // Promise.resolve(scrapePromerica()).then(data => {
-    //     console.log(data);
-    // })
+    Promise.resolve(scrapeBR()).then(data => {
+        console.log(data);
+    })
 
-
+    // scrapeScotiaBank();
 
 module.exports = {
     scrapeBR,
